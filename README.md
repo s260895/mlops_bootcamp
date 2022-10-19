@@ -129,7 +129,7 @@ pip install -r requirements.txt
 pip list
 
 # start mlflow ui with sqlite backend
-mlflow ui ---backend-store-uri=sqlite:///mlflow.db
+mlflow ui --backend-store-uri=sqlite:///mlflow.db
 
 # in browser open
 localhost:5000
