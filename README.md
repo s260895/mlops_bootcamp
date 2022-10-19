@@ -43,8 +43,10 @@ docker container start mlops_instance
 # login to mlops_instance
 docker exec -it --user=mlops mlops_instance bash
 
-# install wget (file downloading tool)
+# install wget & curl(file downloading tool)
 sudo apt install wget
+sudo apt install curl
+
 
 # install vim (file editing tool)
 sudo apt install vim
@@ -55,11 +57,14 @@ sudo apt install git
 # go to home directory
 cd ~
 
-# download anaconda installer
+# download and install anaconda installer
 wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
-
-# run anaconda installer and complete installation wizard
 bash Anaconda3-2022.05-Linux-x86_64.sh
+
+# download and install vscode-server
+wget https://aka.ms/install-vscode-server/setup.sh 
+bash setup.sh
+
 
 # lgout and log back in
 exit
@@ -109,6 +114,10 @@ conda create -n mlops_bootcamp_env python=3.9
 
 # check if environment created 
 conda info --envs
+
+# spin up vscode server
+# this opens up a url to remote vscode environment, do all following steps in that env
+code-server
 
 # activate created conda environment
 conda activate mlops_bootcamp_env
