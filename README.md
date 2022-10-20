@@ -21,14 +21,12 @@ apt upgrade
 apt install sudo
 
 # create mlops user with specified home directory
-<!-- useradd mlops --home /home/mlops -->
-sudo useradd -m -d /home/dev dev
+sudo useradd -m -d /home/mlops mlops
 # set password for mlops user
 passwd dev
 
 # add dev user to sudoers
-sudo adduser dev sudo
-
+sudo adduser mlops sudo
 
 # logout of mlops_instance
 exit
@@ -130,6 +128,3 @@ pip list
 
 # start mlflow ui with sqlite backend
 mlflow ui --backend-store-uri=sqlite:///mlflow.db
-
-# in browser open
-localhost:5000
