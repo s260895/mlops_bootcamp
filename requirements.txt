@@ -5,3 +5,5 @@ pandas
 seaborn
 hyperopt
 xgboost
+pyarrow
+prefect==2.0b5
