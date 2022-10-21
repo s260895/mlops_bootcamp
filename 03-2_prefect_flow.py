@@ -29,7 +29,7 @@ from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from hyperopt.pyll import scope
 
 # prefect workflow orchestration
-from prefect import flow
+from prefect import flow,task
 
 # define function to clean dataset
 def read_and_clean_dataframe(
@@ -44,6 +44,7 @@ def read_and_clean_dataframe(
     df['PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)
     return df
 
+@task
 def add_features(
     train_path,
     val_path
@@ -76,7 +77,7 @@ def add_features(
 
     return X_train,y_train,X_val,y_val, dv, scaler
 
-
+@task
 def hyperparameter_optimizer(
     train,
     valid,
@@ -122,7 +123,7 @@ def hyperparameter_optimizer(
 
     return 
 
-
+@task
 def train_best_model(
     train,
     valid,
@@ -172,7 +173,7 @@ def train_best_model(
     
     return
 
-
+@flow
 def main(
     train_path = 'data/green_tripdata_2021-01.parquet',
     val_path = 'data/green_tripdata_2021-01.parquet',
@@ -181,10 +182,11 @@ def main(
 ):
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(experiment)
-    X_train,y_train,X_val,y_val, dv, scaler = add_features(train_path,val_path)
+    X_train,y_train,X_val,y_val, dv, scaler = add_features(train_path,val_path).result()
     train = xgb.DMatrix(X_train,label=y_train)
     valid = xgb.DMatrix(X_val, label = y_val)
     hyperparameter_optimizer(train,valid,y_val)
     train_best_model(train,valid,y_val,dv,scaler)
 
 main()
+

@@ -115,6 +115,7 @@ conda info --envs
 
 # spin up vscode server
 # this opens up a url to remote vscode environment, do all following steps in that env
+# runs on port 34547
 code-server
 
 # activate created conda environment
@@ -127,4 +128,13 @@ pip install -r requirements.txt
 pip list
 
 # start mlflow ui with sqlite backend
+# runs on port 5000
 mlflow ui --backend-store-uri=sqlite:///mlflow.db
+
+# start prefect orion workflow orchestration
+# runs on port 4200
+prefect orion start
+
+# create prefect orion deployment using py file
+prefect deployment create <name-of-file.py>
+
