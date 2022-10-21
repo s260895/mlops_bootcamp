@@ -131,6 +131,9 @@ pip list
 # runs on port 5000
 mlflow ui --backend-store-uri=sqlite:///mlflow.db
 
+# alternatively, run mlflow server 
+mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=./mlruns
+
 # start prefect orion workflow orchestration
 # runs on port 4200
 prefect orion start
