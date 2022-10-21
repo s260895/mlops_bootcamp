@@ -39,66 +39,18 @@ from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 
 
-class DataFrameCleaner(BaseEstimator, TransformerMixin):
-    # initializer 
-    def __init__(self):
-        # save the features list internally in the class
-        self.y = pd.DataFrame()
-        return
-        
-    def fit(self, X, y = None):
-        return self    
-        
-    def transform(self, X, y=None):
-        # return the dataframe with the specified features
-        self.X = X
-        self.y['duration'] = self.X['lpep_dropoff_datetime'] - self.X['lpep_pickup_datetime']
-        self.y['duration'] = self.y['duration'].apply(lambda td: td.total_seconds()/60)
-        self.X['duration'] = self.X[(self.X['duration'] >= 1) & (self.X['duration'] <= 60)]
-        self.X = self.X[(self.X['trip_distance'] > 1)&(self.X['trip_distance'] < 25)]
-        self.X = self.X[(self.X['total_amount'] > 1)&(self.X['total_amount'] < 150)]
-        self.X = self.X[self.X['passenger_count'] > 0]  
-        self.X['PU_DO_pair'] = self.X['PULocationID'].astype(str) + '_' + self.X['DOLocationID'].astype(str)                
-        return self.X, self.y
-
-data_cleaning_pipeline = Pipeline(steps=[('clean', DataFrameCleaner())])
-numeric_pipeline = Pipeline(steps=[
-    ('impute', SimpleImputer(strategy='mean')),
-    ('scale', StandardScaler())
-])
-categorical_pipeline = Pipeline(steps=[
-    ('impute', SimpleImputer(strategy='most_frequent')),
-    ('one-hot', OneHotEncoder(handle_unknown='ignore', sparse=False))
-])
-
-preprocessor_pipeline = ColumnTransformer(transformers=[
-    ('clean', data_cleaning_pipeline, numerical_features+categorical_features),
-    ('numeric', numeric_pipeline, numerical_features),
-    ('categoric', categorical_pipeline, categorical_features)
-])
-
-regression_model = GradientBoostingRegressor()
-
-regressor_pipe = Pipeline(steps=[
-    ('preprocess', preprocessor_pipeline),
-    ('model', regression_model)
-])
-
-
-
-
-# # define function to clean dataset
-# def read_and_clean_dataframe(
-#     df
-# ):
-#     df['duration'] = df.lpep_dropoff_datetime - df.lpep_pickup_datetime
-#     df['duration'] = df.duration.apply(lambda td: td.total_seconds()/60)
-#     df = df[(df.duration >= 1) & (df.duration <= 60)]
-#     df = df[(df.trip_distance > 1)&(df.trip_distance < 25)]
-#     df = df[(df.total_amount > 1)&(df.total_amount < 150)]
-#     df = df[df['passenger_count'] != 0]  
-#     df['PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)
-#     return df
+# define function to clean dataset
+def read_and_clean_dataframe(
+    df
+):
+    df['duration'] = df.lpep_dropoff_datetime - df.lpep_pickup_datetime
+    df['duration'] = df.duration.apply(lambda td: td.total_seconds()/60)
+    df = df[(df.duration >= 1) & (df.duration <= 60)]
+    df = df[(df.trip_distance > 1)&(df.trip_distance < 25)]
+    df = df[(df.total_amount > 1)&(df.total_amount < 150)]
+    df = df[df['passenger_count'] != 0]  
+    df['PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)
+    return df
 
 def preprocess_dataframe(
     train_path,
