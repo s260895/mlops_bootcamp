@@ -44,37 +44,40 @@ from sklearn.compose import ColumnTransformer
 import copy
 
 # intel sklearn optimization library
-from sklearnex import patch_sklearn
-patch_sklearn()
+# from sklearnex import patch_sklearn
+# patch_sklearn()
 
 
 
 # %%
-def cleaned_train_and_target(df,clean=True):
+def cleaned_train_and_target(df,train_feat,target_feat,inference=False):
     
     # create concatenated categorical feature
     df.loc[:,'PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)                
-    # create target feature
-    df.loc[:,'duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
-    df.loc[:,'duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
-
-    if clean == True:
+    
+    if inference == False:
+        # create target feature
+        df.loc[:,'duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
+        df.loc[:,'duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
         # filter out rows based on various conditions
         df = df[(df['duration'] >= 1) & (df['duration'] <= 60)]
         df = df[(df['trip_distance'] > 1)&(df['trip_distance'] < 25)]
         df = df[(df['total_amount'] > 1)&(df['total_amount'] < 150)]
         df = df[df['passenger_count'] > 0]  
- 
-    y = df['duration']
-    X = df[['PU_DO_pair','trip_distance','fare_amount']]
+        y = df[target_feat]
+        X = df[train_feat]
+    if inference == True:
+        y = None
+        X = df[train_feat]
+    
     return X,y
 
 
 # %%
-def initialize_regression_model(params,type='gradientbooster'):
+def initialize_regression_model(params,categoric_feat,numeric_feat,type='gradientbooster'):
 
-    categorical = ['PU_DO_pair']
-    numerical = ['trip_distance','fare_amount']
+    categorical = categoric_feat
+    numerical = numeric_feat
 
     numeric_pipeline = Pipeline(steps=[
         ('impute', SimpleImputer(strategy='mean')),
@@ -109,13 +112,15 @@ def hyperparameter_optimizer(
     X_train,
     y_train,
     X_val,
-    y_val
+    y_val,
+    categoric_feat,
+    numeric_feat
 ):
 
     # define hyper-parameter search space
     search_space = {
         # 'n_estimators':hp.choice('n_estimators',np.arange(10,101,1)),
-        'learning_rate':hp.loguniform('learning_rate',-3,0),
+        'learning_rate':hp.loguniform('learning_rate',-3,1),
         # 'min_samples_split':hp.loguniform('min_child_weight',-4,0),
         # 'max_depth':scope.int(hp.quniform('max_depth',5,100,5)),        
         'random_state':42
@@ -128,7 +133,7 @@ def hyperparameter_optimizer(
             mlflow.set_tag('model','gradientboostingregressor')
             # mlflow.log_params(params)
             mlflow.sklearn.autolog()
-            pipe = initialize_regression_model(params=params,type='gradientbooster')
+            pipe = initialize_regression_model(params=params,categoric_feat=categoric_feat,numeric_feat=numeric_feat,type='gradientbooster')
             pipe.fit(X_train,y_train)
             y_pred = pipe.predict(X_val)
             rmse = mean_squared_error(y_val,y_pred,squared=False)
@@ -157,17 +162,21 @@ def main(
     train_path = 'data/green_tripdata_2021-01.parquet',
     val_path = 'data/green_tripdata_2021-01.parquet',
     tracking_uri = 'sqlite:///mlflow.db',
-    experiment = 'gradient-booster-experiment'
+    experiment = 'gradient-booster-experiment-2',
+    target_feat = 'duration',
+    train_feat = ['PU_DO_pair','trip_distance','total_amount','passenger_count'],
+    categoric_feat = ['PU_DO_pair'],
+    numeric_feat = ['trip_distance','total_amount','passenger_count']
 ):
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(experiment)
     train_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-01.parquet'
-    val_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-01.parquet'
+    val_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-02.parquet'
     df_train = pd.read_parquet(train_path)
     df_val = pd.read_parquet(val_path)
-    X_train,y_train = cleaned_train_and_target(df_train,clean=True)
-    X_val, y_val = cleaned_train_and_target(df_val,clean=True)
-    hyperparameter_optimizer(X_train,y_train,X_val,y_val)
+    X_train,y_train = cleaned_train_and_target(df_train,train_feat,target_feat)
+    X_val, y_val = cleaned_train_and_target(df_val,train_feat,target_feat)
+    hyperparameter_optimizer(X_train,y_train,X_val,y_val,categoric_feat,numeric_feat)
     # train_best_model(train,valid,y_val,dv,scaler)
 
 # main()
