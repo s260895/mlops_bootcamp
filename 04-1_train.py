@@ -66,7 +66,7 @@ def cleaned_train_and_target(df,clean=True):
         df = df[df['passenger_count'] > 0]  
  
     y = df['duration']
-    X = df[['PU_DO_pair','trip_distance','fare_amount']]
+    X = df[['PU_DO_pair','trip_distance','total_amount']]
     return X,y
 
 
