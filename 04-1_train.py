@@ -53,10 +53,10 @@ patch_sklearn()
 def cleaned_train_and_target(df,clean=True):
     
     # create concatenated categorical feature
-    df['PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)                
+    df.loc[:,'PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)                
     # create target feature
-    df['duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
-    df['duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
+    df.loc[:,'duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
+    df.loc[:,'duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
 
     if clean == True:
         # filter out rows based on various conditions
@@ -66,7 +66,7 @@ def cleaned_train_and_target(df,clean=True):
         df = df[df['passenger_count'] > 0]  
  
     y = df['duration']
-    X = df[['PU_DO_pair','trip_distance','total_amount']]
+    X = df[['PU_DO_pair','trip_distance','fare_amount']]
     return X,y
 
 
