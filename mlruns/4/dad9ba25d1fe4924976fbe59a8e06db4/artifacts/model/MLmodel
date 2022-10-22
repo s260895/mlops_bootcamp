@@ -1,0 +1,21 @@
+artifact_path: model
+flavors:
+  python_function:
+    env: conda.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.6
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.1.2
+mlflow_version: 1.30.0
+model_uuid: c7659a18bb9c48469d128b06a1ba6414
+run_id: dad9ba25d1fe4924976fbe59a8e06db4
+signature:
+  inputs: '[{"name": "PU_DO_pair", "type": "string"}, {"name": "trip_distance", "type":
+    "double"}, {"name": "fare_amount", "type": "double"}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+utc_time_created: '2022-10-22 11:12:06.547101'
