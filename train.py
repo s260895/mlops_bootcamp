@@ -161,8 +161,8 @@ def main(
 ):
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(experiment)
-    train_path = 'data/green_tripdata_2021-01.parquet'
-    val_path = 'data/green_tripdata_2021-01.parquet'
+    train_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-01.parquet'
+    val_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-01.parquet'
     df_train = pd.read_parquet(train_path)
     df_val = pd.read_parquet(val_path)
     X_train,y_train = cleaned_train_and_target(df_train,clean=True)
@@ -170,7 +170,7 @@ def main(
     hyperparameter_optimizer(X_train,y_train,X_val,y_val)
     # train_best_model(train,valid,y_val,dv,scaler)
 
-main()
+# main()
 
 # %%
 
