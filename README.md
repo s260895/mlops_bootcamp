@@ -129,7 +129,7 @@ pip list
 
 # start mlflow ui with sqlite backend
 # runs on port 5000
-mlflow ui --backend-store-uri=sqlite:///mlflow.db
+<!-- mlflow ui --backend-store-uri=sqlite:///mlflow.db -->
 
 # alternatively, run mlflow server 
 mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=./mlruns
