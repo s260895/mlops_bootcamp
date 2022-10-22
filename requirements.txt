@@ -7,3 +7,4 @@ hyperopt
 xgboost
 pyarrow
 prefect
+scikit-learn-intelex
