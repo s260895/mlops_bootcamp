@@ -48,14 +48,13 @@ import copy
 # patch_sklearn()
 
 
-
 # %%
 def cleaned_train_and_target(df,train_feat,target_feat,inference=False):
-    
-    # create concatenated categorical feature
-    df.loc[:,'PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)                
-    
+
+        
     if inference == False:
+        # create concatenated categorical feature
+        df.loc[:,'PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)
         # create target feature
         df.loc[:,'duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
         df.loc[:,'duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
@@ -67,8 +66,11 @@ def cleaned_train_and_target(df,train_feat,target_feat,inference=False):
         y = df[target_feat]
         X = df[train_feat]
     if inference == True:
+        df['PU_DO_pair'] = str(df['PULocationID']) + '_' + str(df['DOLocationID'])             
         y = None
-        X = df[train_feat]
+        del df['PULocationID']
+        del df['DOLocationID']
+        X = df
     
     return X,y
 
