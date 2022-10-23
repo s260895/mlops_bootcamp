@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-predict = __import__('04-2_predict')
+predict = __import__('04-3_predict')
 
 
 app = Flask('duration-prediction')

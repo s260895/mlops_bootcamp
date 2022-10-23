@@ -1,11 +1,8 @@
 # %%
 # data manipulation and storage
+from bleach import clean
 import pandas as pd
 import numpy as np
-
-# plotting and graphs
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # data preprocessing
 # from sklearn.feature_extraction import DictVectorizer
@@ -47,32 +44,7 @@ import copy
 # from sklearnex import patch_sklearn
 # patch_sklearn()
 
-
-# %%
-def cleaned_train_and_target(df,train_feat,target_feat,inference=False):
-
-        
-    if inference == False:
-        # create concatenated categorical feature
-        df.loc[:,'PU_DO_pair'] = df['PULocationID'].astype(str) + '_' + df['DOLocationID'].astype(str)
-        # create target feature
-        df.loc[:,'duration'] = df['lpep_dropoff_datetime'] - df['lpep_pickup_datetime']
-        df.loc[:,'duration'] = df['duration'].apply(lambda td: td.total_seconds()/60)
-        # filter out rows based on various conditions
-        df = df[(df['duration'] >= 1) & (df['duration'] <= 60)]
-        df = df[(df['trip_distance'] > 1)&(df['trip_distance'] < 25)]
-        df = df[(df['total_amount'] > 1)&(df['total_amount'] < 150)]
-        df = df[df['passenger_count'] > 0]  
-        y = df[target_feat]
-        X = df[train_feat]
-    if inference == True:
-        df['PU_DO_pair'] = str(df['PULocationID']) + '_' + str(df['DOLocationID'])             
-        y = None
-        del df['PULocationID']
-        del df['DOLocationID']
-        X = df
-    
-    return X,y
+clean = __import__('04-1_clean')
 
 
 # %%
@@ -176,14 +148,9 @@ def main(
     val_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-02.parquet'
     df_train = pd.read_parquet(train_path)
     df_val = pd.read_parquet(val_path)
-    X_train,y_train = cleaned_train_and_target(df_train,train_feat,target_feat)
-    X_val, y_val = cleaned_train_and_target(df_val,train_feat,target_feat)
+    X_train,y_train = clean.cleaned_train_and_target(df_train,train_feat,target_feat)
+    X_val, y_val = clean.cleaned_train_and_target(df_val,train_feat,target_feat)
     hyperparameter_optimizer(X_train,y_train,X_val,y_val,categoric_feat,numeric_feat)
     # train_best_model(train,valid,y_val,dv,scaler)
 
 # main()
-
-# %%
-
-
-

@@ -127,17 +127,16 @@ pip install -r requirements.txt
 # verify if libraries are installed
 pip list
 
-# start mlflow ui with sqlite backend
+# start mlflow server with sqlite backend
 # runs on port 5000
-<!-- mlflow ui --backend-store-uri=sqlite:///mlflow.db -->
-
-# alternatively, run mlflow server 
 mlflow server --backend-store-uri=sqlite:///mlflow.db --default-artifact-root=./mlruns
 
-# start prefect orion workflow orchestration
+# start prefect orion workflow orchestration (optional)
 # runs on port 4200
 prefect orion start
 
-# create prefect orion deployment using py file
+# create prefect orion deployment using py file(optional)
 prefect deployment create <name-of-file.py>
 
+# run gunicorn server instead of flask for accepting http post requests for prediction endpoint
+gunicorn --bind=0.0.0.0:9696 04-4_flask_app:prediction_endpoint

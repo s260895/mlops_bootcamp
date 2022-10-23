@@ -2,7 +2,7 @@ import pandas as pd
 pd.options.mode.chained_assignment = None 
 import requests
 import json
-predict = __import__('04-2_predict')
+predict = __import__('04-3_predict')
 
 test_payload = {'PULocationID':['12'],
                 'DOLocationID':['13'],

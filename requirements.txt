@@ -9,3 +9,4 @@ pyarrow
 prefect
 scikit-learn-intelex
 flask
+gunicorn
