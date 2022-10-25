@@ -144,8 +144,8 @@ def main(
 ):
     mlflow.set_tracking_uri(tracking_uri)
     mlflow.set_experiment(experiment)
-    train_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-01.parquet'
-    val_path = '/home/ub/Documents/git/mlops_bootcamp/data/green_tripdata_2021-02.parquet'
+    train_path = './data/green_tripdata_2021-01.parquet'
+    val_path = './data/green_tripdata_2021-02.parquet'
     df_train = pd.read_parquet(train_path)
     df_val = pd.read_parquet(val_path)
     X_train,y_train = clean.cleaned_train_and_target(df_train,train_feat,target_feat)
