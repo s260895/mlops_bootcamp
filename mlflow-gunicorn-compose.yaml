@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mlflow-server:
+    # image: mlflow_image
+    build:
+      context: . 
+      dockerfile: ./mlflow.Dockerfile
+    ports:
+     - 5000:5000
+    volumes:
+     - mlflow-data:/mlflow-server
+  duration-predictor:
+    # image: duration-predictor_image
+    build:
+      context: .
+      dockerfile: ./gunicorn.Dockerfile
+    ports:
+     - 9696:9696
+    volumes:
+     - duration-predictor-data:/mlops_bootcamp
+    depends_on:
+     - "mlflow-server"
+volumes:
+  mlflow-data:
+    driver: local
+  duration-predictor-data:
+    driver: local

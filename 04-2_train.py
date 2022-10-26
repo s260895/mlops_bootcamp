@@ -1,6 +1,6 @@
 # %%
+data_clean = __import__('04-1_clean')
 # data manipulation and storage
-from bleach import clean
 import pandas as pd
 import numpy as np
 
@@ -44,7 +44,6 @@ import copy
 # from sklearnex import patch_sklearn
 # patch_sklearn()
 
-clean = __import__('04-1_clean')
 
 
 # %%
@@ -148,8 +147,8 @@ def main(
     val_path = './data/green_tripdata_2021-02.parquet'
     df_train = pd.read_parquet(train_path)
     df_val = pd.read_parquet(val_path)
-    X_train,y_train = clean.cleaned_train_and_target(df_train,train_feat,target_feat)
-    X_val, y_val = clean.cleaned_train_and_target(df_val,train_feat,target_feat)
+    X_train,y_train = data_clean.cleaned_train_and_target(df_train,train_feat,target_feat)
+    X_val, y_val = data_clean.cleaned_train_and_target(df_val,train_feat,target_feat)
     hyperparameter_optimizer(X_train,y_train,X_val,y_val,categoric_feat,numeric_feat)
     # train_best_model(train,valid,y_val,dv,scaler)
 
