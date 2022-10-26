@@ -1,16 +1,16 @@
 version: '3'
 services:
   mlflow-server:
-    # image: mlflow_image
+    image: mlflow_image
     build:
       context: . 
       dockerfile: ./mlflow.Dockerfile
     ports:
-     - 5000:5000
+     - 5000:5000  
     volumes:
      - mlflow-data:/mlflow-server
   duration-predictor:
-    # image: duration-predictor_image
+    image: duration-predictor_image
     build:
       context: .
       dockerfile: ./gunicorn.Dockerfile
