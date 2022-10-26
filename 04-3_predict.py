@@ -1,7 +1,10 @@
 import mlflow
 import pandas as pd
 data_clean = __import__('04-1_clean')
-mlflow.set_tracking_uri("http://localhost:5000")
+import os
+tracking_uri = os.environ["MLFLOW_TRACKING_URI"]
+
+mlflow.set_tracking_uri(tracking_uri)
 
 # define function for prediction using saved model
 def predict(raw_data,train_feat,target_feat):
