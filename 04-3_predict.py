@@ -2,12 +2,11 @@ import mlflow
 import pandas as pd
 data_clean = __import__('04-1_clean')
 import os
-tracking_uri = os.environ["MLFLOW_TRACKING_URI"]
-
-mlflow.set_tracking_uri(tracking_uri)
 
 # define function for prediction using saved model
 def predict(raw_data,train_feat,target_feat):
+    tracking_uri = os.environ["MLFLOW_TRACKING_URI"]
+    mlflow.set_tracking_uri(tracking_uri)
     # Load model from mlflow as a PyFuncModel.
     logged_model = 'runs:/9a28033fdd914d0eb4ae48fb11fde866/model'
     loaded_model = mlflow.pyfunc.load_model(logged_model)
