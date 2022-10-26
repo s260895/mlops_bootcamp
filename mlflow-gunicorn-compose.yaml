@@ -16,15 +16,16 @@ services:
     build:
       context: .
       dockerfile: ./gunicorn.Dockerfile
-    expose:
-     - 9696
     ports:
      - 9696:9696
+    expose:
+     - 9696
     volumes:
      - duration-predictor-data:/mlops_bootcamp
     depends_on:
      - "mlflow-server"
-
+    environment:
+      MLFLOW_TRACKING_URI: 'http://mlflow-server:5000'
 volumes:
   mlflow-data:
     driver: local
