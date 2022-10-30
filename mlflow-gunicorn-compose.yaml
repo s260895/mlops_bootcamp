@@ -26,6 +26,7 @@ services:
      - "mlflow-server"
     environment:
       MLFLOW_TRACKING_URI: 'http://mlflow-server:5000'
+      MLFLOW_EXPERIMENT_NAME: 'gradient-booster-experiment-2'
 volumes:
   mlflow-data:
     driver: local

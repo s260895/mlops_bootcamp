@@ -6,7 +6,7 @@ import os
 tracking_uri = os.environ["MLFLOW_TRACKING_URI"]
 experiment_name = os.environ["MLFLOW_EXPERIMENT_NAME"]
 mlflow.set_tracking_uri(tracking_uri)
-mlflow.set_experiment(experiment)
+mlflow.set_experiment(experiment_name)
 
 # define function for prediction using saved model
 def predict(raw_data,train_feat,target_feat):
