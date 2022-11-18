@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mldeployment-server:
+    image: ml_image
+    build:
+      context: . 
+      dockerfile: ./mldeploy.Dockerfile
+    ports:
+     - 5000:5000
+     - 9696:9696
+    expose:
+     - 5000  
+     - 9696
+    volumes:
+     - ml_image-data:/mldeployment-server
+    environment:
+      MLFLOW_TRACKING_URI: 'http://localhost:5000'
+      MLFLOW_EXPERIMENT_NAME: 'gradient-booster-experiment-2'
+volumes:
+  ml_image-data:
+    driver: local

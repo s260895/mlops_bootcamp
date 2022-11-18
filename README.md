@@ -140,3 +140,4 @@ prefect deployment create <name-of-file.py>
 
 # run gunicorn server instead of flask for accepting http post requests for prediction endpoint
 gunicorn --bind=0.0.0.0:9696 04-4_flask_app:prediction_endpoint
+
